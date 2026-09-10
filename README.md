@@ -4,7 +4,24 @@ Live-Stream Dynamic Overlay Production Machine
 
 **[打开在线工作台](https://live-overlay-studio.casper-hu.chatgpt.site)**
 
-本仓库保存完整可编辑源码。现有网站继续使用原地址，本次上传不改变网站功能；GitHub 源码更新不会自动同步到现有网站。
+本仓库保存完整可编辑源码，并附带可直接用于 GitHub Pages 的静态版本。原有 Sites 网站保持不变。
+
+## GitHub Pages 发布
+
+静态网站已生成到 `docs/`，不需要服务器、数据库或密钥。
+
+首次启用：仓库 **Settings → Pages → Build and deployment**，选择：
+
+- Source：**Deploy from a branch**
+- Branch：**main**
+- Folder：**/docs**
+- 点击 **Save**，等待 GitHub 部署完成。
+
+Pages 地址（启用并部署成功后生效）：https://casteen-code.github.io/live-overlay-studio/
+
+以后修改代码后运行 `npm ci`、`npm run build:pages`，将源码和更新的 `docs/` 一并提交到 main。已启用 Pages 时会自动发布 docs 中的新内容。
+
+静态版复用同一套编辑器与透明编码器，图片留在使用者浏览器中处理。Worker、字体样式、图标与 HTML 导出渲染器都使用可在项目子目录下工作的本地资源，不依赖 CDN。
 
 ## 本地启动
 
@@ -17,7 +34,7 @@ npm ci
 npm run dev
 ```
 
-浏览器打开 `http://localhost:5173`。生产构建使用 `npm run build`。这是 Vinext/React 项目，不能将源码直接作为 GitHub Pages 的静态 HTML 发布。
+浏览器打开 `http://localhost:5173`。生产构建使用 `npm run build`。默认目标为 Vinext/React；GitHub Pages 使用下方独立的静态构建目标。
 
 为 TikTok 直播制作可重复编辑的促销贴片。图片处理、动画预览和文件编码均在用户浏览器中运行，不需要把图片上传到服务器。
 

@@ -22,7 +22,7 @@ export async function exportOverlay(input: Scene, format: ExportFormat, scale: n
   const name = (scene.name || "我的贴片").replace(/[<>:"/\\|?*\x00-\x1F]/g, "-"); const filename = `${name}-${width}x${height}.${format}`;
   if (signal.aborted) throw abortError();
   if (format === "html") {
-    const response = await fetch("/overlay-renderer.js", { signal }); if (!response.ok) throw new Error("无法准备 HTML 文件，请刷新后重试");
+    const response = await fetch(new URL("./overlay-renderer.js", document.baseURI), { signal }); if (!response.ok) throw new Error("无法准备 HTML 文件，请刷新后重试");
     const html = makeStandaloneHTML(scene, scale, await response.text()); onProgress(100); return { blob: new Blob([html], { type: "text/html;charset=utf-8" }), filename };
   }
   const frames = Math.round(scene.duration * scene.fps);
@@ -36,7 +36,7 @@ export async function exportOverlay(input: Scene, format: ExportFormat, scale: n
     const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(b => b ? resolve(b) : reject(new Error("PNG 导出失败")), "image/png"));
     if (signal.aborted) throw abortError(); onProgress(100); return { blob, filename };
   }
-  const worker = new Worker("/overlay-worker.js", { type: "module" });
+  const worker = new Worker(new URL("./overlay-worker.js", document.baseURI), { type: "module" });
   let pendingReject: ((reason: Error) => void) | null = null;
   const cancel = () => { worker.terminate(); pendingReject?.(abortError()); };
   signal.addEventListener("abort", cancel, { once: true });
